@@ -271,5 +271,21 @@ document.querySelectorAll('.download-page-btn').forEach(btn => {
     }
   });
 });
+</script><script>
+document.addEventListener("DOMContentLoaded", () => {
+  function desbloquearTodosOsSons() {
+    document.querySelectorAll("audio").forEach(audio => {
+      audio.play().then(() => {
+        audio.pause();
+        audio.currentTime = 0;
+      }).catch(() => {});
+    });
+    document.removeEventListener("click", desbloquearTodosOsSons);
+    document.removeEventListener("touchstart", desbloquearTodosOsSons);
+  }
+
+  document.addEventListener("click", desbloquearTodosOsSons, { once: true });
+  document.addEventListener("touchstart", desbloquearTodosOsSons, { once: true });
+});
 </script></body>
 </html>
