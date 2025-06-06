@@ -96,6 +96,7 @@ function updateButtonIcon(isAudioPlaying) {
 function showSlide(index) {
   if (index === currentIndex) return;
 
+  document.getElementById("transitionSound").play().catch(() => {});
   carousel.style.transform = `translateY(-${index * 100}vh)`;
 
   slides.forEach((slide, i) => {
@@ -184,8 +185,7 @@ slides.forEach(slide => {
       updateButtonIcon(false);
     });
   }
-});
-</script>
+});</script>
 <img alt="Download" class="download-page-btn" onclick="baixarImagem()" src="images/download-icon.png"/>
 <script src="https://cdn.jsdelivr.net/npm/html2canvas@1.4.1/dist/html2canvas.min.js"></script>
 <style>
@@ -201,6 +201,7 @@ slides.forEach(slide => {
   </style>
 <script>
     function baixarImagem() {
+  document.getElementById('downloadSound').play().catch(() => {});
       html2canvas(document.querySelector('.slide:nth-child(' + (currentIndex + 1) + ')')).then(canvas => {
         const link = document.createElement('a');
         link.download = 'pagina_atual.png';
@@ -244,5 +245,22 @@ slides.forEach(slide => {
       });
     }
   </script>
-</body>
+<audio id="transitionSound" preload="auto" src="audio/folha.mp3"></audio><script>
+document.addEventListener("DOMContentLoaded", () => {
+  function desbloquearSom() {
+    const audio = document.getElementById("transitionSound");
+    if (audio) {
+      audio.play().then(() => {
+        audio.pause();
+        audio.currentTime = 0;
+      }).catch(() => {});
+    }
+    document.removeEventListener("click", desbloquearSom);
+    document.removeEventListener("touchstart", desbloquearSom);
+  }
+
+  document.addEventListener("click", desbloquearSom, { once: true });
+  document.addEventListener("touchstart", desbloquearSom, { once: true });
+});
+</script><audio id="downloadSound" src="audio/botdow.mp3"></audio></body>
 </html>
