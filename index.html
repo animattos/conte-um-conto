@@ -233,6 +233,47 @@
       });
     }
   </script>
+
+  <img src="images/download-icon.png" class="download-page-btn" onclick="baixarImagem()" alt="Download">
+  <script src="https://cdn.jsdelivr.net/npm/html2canvas@1.4.1/dist/html2canvas.min.js"></script>
+  <style>
+    .download-page-btn {
+      position: fixed;
+      bottom: 20px;
+      right: 20px;
+      width: 60px;
+      height: 60px;
+      cursor: pointer;
+      z-index: 9999;
+    }
+  </style>
+  <script>
+    let currentIndex = 0;  // garantir escopo global
+
+    function baixarImagem() {
+      const slide = document.querySelectorAll('.slide')[currentIndex];
+      html2canvas(slide).then(canvas => {
+        const ctx = canvas.getContext('2d');
+        const logo = new Image();
+        logo.crossOrigin = 'anonymous';
+        logo.onload = () => {
+          const logoWidth = canvas.width * 0.25;
+          const logoHeight = logo.height * (logoWidth / logo.width);
+          const posX = canvas.width - logoWidth - 20;
+          const posY = canvas.height - logoHeight - 20;
+          ctx.drawImage(logo, posX, posY, logoWidth, logoHeight);
+
+          // criar link e baixar imagem com marca
+          const link = document.createElement('a');
+          link.download = 'pagina_com_marca.png';
+          link.href = canvas.toDataURL('image/png');
+          link.click();
+        };
+        logo.src = 'images/marca.png';
+      });
+    }
+  </script>
 </body>
+
 
 </html>
