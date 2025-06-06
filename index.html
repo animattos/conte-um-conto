@@ -273,7 +273,54 @@
       });
     }
   </script>
+
+  <img src="images/download-icon.png" class="download-page-btn" onclick="baixarImagem()" alt="Download">
+  <script src="https://cdn.jsdelivr.net/npm/html2canvas@1.4.1/dist/html2canvas.min.js"></script>
+  <style>
+    .download-page-btn {
+      position: fixed;
+      bottom: 20px;
+      right: 20px;
+      width: 60px;
+      height: 60px;
+      cursor: pointer;
+      z-index: 9999;
+    }
+  </style>
+  <script>
+    const slides = document.querySelectorAll('.slide');
+    let currentIndex = 0;
+
+    function showSlide(index) {
+      const carousel = document.getElementById("carousel");
+      carousel.style.transform = `translateY(-${index * 100}vh)`;
+      currentIndex = index;
+    }
+
+    function baixarImagem() {
+      const currentSlide = slides[currentIndex];
+
+      html2canvas(currentSlide).then(canvas => {
+        const ctx = canvas.getContext('2d');
+        const marca = new Image();
+        marca.onload = () => {
+          const width = canvas.width * 0.25;
+          const height = marca.height * (width / marca.width);
+          const x = canvas.width - width - 20;
+          const y = canvas.height - height - 20;
+          ctx.drawImage(marca, x, y, width, height);
+
+          const link = document.createElement('a');
+          link.download = 'pagina_com_marca.png';
+          link.href = canvas.toDataURL('image/png');
+          link.click();
+        };
+        marca.src = 'images/marca.png';
+      });
+    }
+  </script>
 </body>
+
 
 
 </html>
