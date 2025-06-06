@@ -66,7 +66,12 @@
   <div class="carousel" id="carousel">
     <section class="slide"><img src="images/capa.jpg" alt="Capa"><audio id="audio0" src="audio/capa.mp3"></audio></section>
     <section class="slide"><img src="images/a.jpg" alt="O Menino e o Foguete"><audio id="audio1" src="audio/a.mp3"></audio></section>
-    <section class="slide"><img src="images/b.jpg" alt="O Sétimo Gato"><audio id="audio2" src="audio/b.mp3"></audio></section>
+    <section class="slide" style="position: relative;">
+  <img src="images/b.jpg" alt="O Sétimo Gato">
+  <audio id="audio2" src="audio/b.mp3"></audio>
+  <div class="toque-som" style="top: 5%; left: 70%; width: 20%; height: 25%;" data-som="audio/gato.mp3"></div>
+
+</section>
     <section class="slide"><img src="images/c.jpg" alt="A Flor Que Chegou Primeiro"><audio id="audio3" src="audio/c.mp3"></audio></section>
     <section class="slide"><img src="images/d.jpg" alt="Meu Amigo Robô"><audio id="audio4" src="audio/d.mp3"></audio></section>
   </div>
@@ -233,6 +238,128 @@
       });
     }
   </script>
+
+  <img src="images/download-icon.png" class="download-page-btn" onclick="baixarImagem()" alt="Download">
+  <script src="https://cdn.jsdelivr.net/npm/html2canvas@1.4.1/dist/html2canvas.min.js"></script>
+  <style>
+    .download-page-btn {
+      position: fixed;
+      bottom: 20px;
+      right: 20px;
+      width: 60px;
+      height: 60px;
+      cursor: pointer;
+      z-index: 9999;
+    }
+  </style>
+  <script>
+    let currentIndex = 0;  // garantir escopo global
+
+    function baixarImagem() {
+      const slide = document.querySelectorAll('.slide')[currentIndex];
+      html2canvas(slide).then(canvas => {
+        const ctx = canvas.getContext('2d');
+        const logo = new Image();
+        logo.crossOrigin = 'anonymous';
+        logo.onload = () => {
+          const logoWidth = canvas.width * 0.25;
+          const logoHeight = logo.height * (logoWidth / logo.width);
+          const posX = canvas.width - logoWidth - 20;
+          const posY = canvas.height - logoHeight - 20;
+          ctx.drawImage(logo, posX, posY, logoWidth, logoHeight);
+
+          // criar link e baixar imagem com marca
+          const link = document.createElement('a');
+          link.download = 'pagina_com_marca.png';
+          link.href = canvas.toDataURL('image/png');
+          link.click();
+        };
+        logo.src = 'images/marca.png';
+      });
+    }
+  </script>
+
+  <img src="images/download-icon.png" class="download-page-btn" onclick="baixarImagem()" alt="Download">
+
+  <script src="https://cdn.jsdelivr.net/npm/html2canvas@1.4.1/dist/html2canvas.min.js"></script>
+
+  <style>
+    .download-page-btn {
+      position: fixed;
+      bottom: 20px;
+      right: 20px;
+      width: 60px;
+      height: 60px;
+      cursor: pointer;
+      z-index: 9999;
+    }
+  </style>
+
+  <script>
+    let currentIndex = 0;
+
+    function baixarImagem() {
+      const slides = document.querySelectorAll(".slide");
+      const currentSlide = slides[currentIndex];
+
+      html2canvas(currentSlide).then(canvas => {
+        const ctx = canvas.getContext("2d");
+        const marca = new Image();
+        marca.onload = () => {
+          const width = canvas.width * 0.25;
+          const height = marca.height * (width / marca.width);
+          const x = canvas.width - width - 20;
+          const y = canvas.height - height - 20;
+          ctx.drawImage(marca, x, y, width, height);
+
+          const link = document.createElement("a");
+          link.download = "pagina_com_marca.png";
+          link.href = canvas.toDataURL("image/png");
+          link.click();
+        };
+        marca.src = "images/marca.png";
+      });
+    }
+  </script>
+
+  <div id="progresso" style="position:fixed;top:10px;left:50%;transform:translateX(-50%);
+    z-index:1000;display:flex;gap:5px;">
+    <span class="estrela">⭐</span>
+    <span class="estrela">⭐</span>
+    <span class="estrela">⭐</span>
+    <span class="estrela">⭐</span>
+    <span class="estrela">⭐</span>
+  </div>
+  <div id="parabens" style="display:none;position:fixed;top:0;left:0;width:100%;height:100%;
+    background-color:rgba(0,0,0,0.8);color:#fff;font-size:2em;display:flex;align-items:center;
+    justify-content:center;z-index:9999;flex-direction:column;">
+    🎉 Parabéns! Você completou a história! 🎉
+    <button onclick="document.getElementById('parabens').style.display='none'" style="margin-top:20px;font-size:1em;">Fechar</button>
+  </div>
+
+  <script>
+    const estrelas = document.querySelectorAll(".estrela");
+    function atualizarEstrelas(index) {
+      estrelas.forEach((e, i) => {
+        e.textContent = i <= index ? "🌟" : "⭐";
+      });
+      if (index === estrelas.length - 1) {
+        document.getElementById("parabens").style.display = "flex";
+      }
+    }
+  </script>
+
+  <script>
+    document.querySelectorAll('.toque-som').forEach(el => {
+      el.addEventListener('click', () => {
+        const audio = new Audio(el.dataset.som);
+        audio.play();
+      });
+    });
+  </script>
 </body>
+</html>
+
+
 
 </html>
