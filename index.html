@@ -245,24 +245,7 @@ slides.forEach(slide => {
       });
     }
   </script>
-<audio id="transitionSound" preload="auto" src="audio/folha.mp3"></audio><script>
-document.addEventListener("DOMContentLoaded", () => {
-  function desbloquearSom() {
-    const audio = document.getElementById("transitionSound");
-    if (audio) {
-      audio.play().then(() => {
-        audio.pause();
-        audio.currentTime = 0;
-      }).catch(() => {});
-    }
-    document.removeEventListener("click", desbloquearSom);
-    document.removeEventListener("touchstart", desbloquearSom);
-  }
-
-  document.addEventListener("click", desbloquearSom, { once: true });
-  document.addEventListener("touchstart", desbloquearSom, { once: true });
-});
-</script><audio id="downloadSound" src="audio/botdow.mp3"></audio><script>
+<audio id="transitionSound" preload="auto" src="audio/folha.mp3"></audio><audio id="downloadSound" src="audio/botdow.mp3"></audio><script>
 document.querySelectorAll('.download-page-btn').forEach(btn => {
   btn.addEventListener('click', () => {
     const sound = document.getElementById('downloadSound');
@@ -273,19 +256,19 @@ document.querySelectorAll('.download-page-btn').forEach(btn => {
 });
 </script><script>
 document.addEventListener("DOMContentLoaded", () => {
-  function desbloquearTodosOsSons() {
-    document.querySelectorAll("audio").forEach(audio => {
-      audio.play().then(() => {
-        audio.pause();
-        audio.currentTime = 0;
+  function desbloquearTodosAudios() {
+    document.querySelectorAll("audio").forEach(a => {
+      a.play().then(() => {
+        a.pause();
+        a.currentTime = 0;
       }).catch(() => {});
     });
-    document.removeEventListener("click", desbloquearTodosOsSons);
-    document.removeEventListener("touchstart", desbloquearTodosOsSons);
+    document.removeEventListener("click", desbloquearTodosAudios);
+    document.removeEventListener("touchstart", desbloquearTodosAudios);
   }
 
-  document.addEventListener("click", desbloquearTodosOsSons, { once: true });
-  document.addEventListener("touchstart", desbloquearTodosOsSons, { once: true });
+  document.addEventListener("click", desbloquearTodosAudios, { once: true });
+  document.addEventListener("touchstart", desbloquearTodosAudios, { once: true });
 });
 </script></body>
 </html>
