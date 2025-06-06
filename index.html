@@ -3,8 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Carrossel com Áudio e Download</title>
-  <script src="https://cdn.jsdelivr.net/npm/html2canvas@1.4.1/dist/html2canvas.min.js"></script>
+  <title>Carrossel com Áudio</title>
   <style>
     body, html {
       margin: 0;
@@ -61,16 +60,6 @@
       transform: scale(0.5);
       opacity: 0;
     }
-
-    .download-page-btn {
-      position: fixed;
-      bottom: 20px;
-      right: 20px;
-      width: 60px;
-      height: 60px;
-      cursor: pointer;
-      z-index: 9999;
-    }
   </style>
 </head>
 <body>
@@ -86,8 +75,6 @@
     <img id="btnIcon" src="images/play-icon.png" alt="Play">
   </button>
 
-  <img src="images/download-icon.png" class="download-page-btn" onclick="baixarImagem()" alt="Download">
-
   <script>
     const carousel = document.getElementById("carousel");
     const slides = document.querySelectorAll(".slide");
@@ -100,6 +87,7 @@
     function updateButtonIcon(isAudioPlaying) {
       const btn = document.getElementById("playButton");
       btn.classList.add("animate");
+
       setTimeout(() => {
         btnIcon.src = isAudioPlaying ? "images/stop-icon.png" : "images/play-icon.png";
         btn.classList.remove("animate");
@@ -107,13 +95,13 @@
     }
 
     function showSlide(index) {
-      currentIndex = index;
       carousel.style.transform = `translateY(-${index * 100}vh)`;
       slides.forEach(slide => {
         const audio = slide.querySelector("audio");
         audio.pause();
         audio.currentTime = 0;
       });
+
       setTimeout(() => {
         const currentAudio = slides[index].querySelector("audio");
         currentAudio.play().then(() => {
@@ -123,24 +111,14 @@
       }, 1000);
     }
 
-    function baixarImagem() {
-      const slide = slides[currentIndex];
-      html2canvas(slide).then(canvas => {
-        const ctx = canvas.getContext("2d");
-        const marca = new Image();
-        marca.onload = () => {
-          const logoWidth = canvas.width * 0.25;
-          const logoHeight = marca.height * (logoWidth / marca.width);
-          const posX = canvas.width - logoWidth - 20;
-          const posY = canvas.height - logoHeight - 20;
-          ctx.drawImage(marca, posX, posY, logoWidth, logoHeight);
-          const link = document.createElement("a");
-          link.download = "pagina_com_marca.png";
-          link.href = canvas.toDataURL("image/png");
-          link.click();
-        };
-        marca.src = "images/marca.png";
+    function stopAllAudio() {
+      slides.forEach(slide => {
+        const audio = slide.querySelector("audio");
+        audio.pause();
+        audio.currentTime = 0;
       });
+      isPlaying = false;
+      updateButtonIcon(false);
     }
 
     carousel.addEventListener("touchstart", (e) => {
@@ -150,10 +128,11 @@
     carousel.addEventListener("touchend", (e) => {
       let endY = e.changedTouches[0].clientY;
       if (startY - endY > 50 && currentIndex < slides.length - 1) {
-        showSlide(currentIndex + 1);
+        currentIndex++;
       } else if (endY - startY > 50 && currentIndex > 0) {
-        showSlide(currentIndex - 1);
+        currentIndex--;
       }
+      showSlide(currentIndex);
     });
 
     playBtn.addEventListener("click", () => {
@@ -172,7 +151,18 @@
     });
 
     window.onload = () => {
-      showSlide(0);
+      const currentAudio = slides[0].querySelector("audio");
+      setTimeout(() => {
+        currentAudio.play().then(() => {
+          isPlaying = true;
+          updateButtonIcon(true);
+        }).catch(() => {});
+      }, 1000);
+
+      currentAudio.addEventListener("ended", () => {
+        isPlaying = false;
+        updateButtonIcon(false);
+      });
     };
 
     slides.forEach(slide => {
@@ -183,5 +173,152 @@
       });
     });
   </script>
+
+  <img src="images/download-icon.png" class="download-page-btn" onclick="baixarImagem()" alt="Download">
+  <script src="https://cdn.jsdelivr.net/npm/html2canvas@1.4.1/dist/html2canvas.min.js"></script>
+  <style>
+    .download-page-btn {
+      position: fixed;
+      bottom: 20px;
+      right: 20px;
+      width: 60px;
+      height: 60px;
+      cursor: pointer;
+      z-index: 9999;
+    }
+  </style>
+  <script>
+    function baixarImagem() {
+      html2canvas(document.querySelector('.slide:nth-child(' + (currentIndex + 1) + ')')).then(canvas => {
+        const link = document.createElement('a');
+        link.download = 'pagina_atual.png';
+        link.href = canvas.toDataURL('image/png');
+        link.click();
+      });
+    }
+  </script>
+
+  <img src="images/download-icon.png" class="download-page-btn" onclick="baixarImagem()" alt="Download">
+  <script src="https://cdn.jsdelivr.net/npm/html2canvas@1.4.1/dist/html2canvas.min.js"></script>
+  <style>
+    .download-page-btn {
+      position: fixed;
+      bottom: 20px;
+      right: 20px;
+      width: 60px;
+      height: 60px;
+      cursor: pointer;
+      z-index: 9999;
+    }
+  </style>
+  <script>
+    function baixarImagem() {
+      const slide = document.querySelector('.slide:nth-child(' + (currentIndex + 1) + ')');
+      html2canvas(slide).then(canvas => {
+        const ctx = canvas.getContext('2d');
+        const logo = new Image();
+        logo.onload = () => {
+          const logoWidth = canvas.width * 0.25;
+          const logoHeight = logo.height * (logoWidth / logo.width);
+          const posX = canvas.width - logoWidth - 20;
+          const posY = canvas.height - logoHeight - 20;
+          ctx.drawImage(logo, posX, posY, logoWidth, logoHeight);
+
+          const link = document.createElement('a');
+          link.download = 'pagina_com_marca.png';
+          link.href = canvas.toDataURL('image/png');
+          link.click();
+        };
+        logo.src = 'images/marca.png';
+      });
+    }
+  </script>
+
+  <img src="images/download-icon.png" class="download-page-btn" onclick="baixarImagem()" alt="Download">
+  <script src="https://cdn.jsdelivr.net/npm/html2canvas@1.4.1/dist/html2canvas.min.js"></script>
+  <style>
+    .download-page-btn {
+      position: fixed;
+      bottom: 20px;
+      right: 20px;
+      width: 60px;
+      height: 60px;
+      cursor: pointer;
+      z-index: 9999;
+    }
+  </style>
+  <script>
+    let currentIndex = 0;  // garantir escopo global
+
+    function baixarImagem() {
+      const slide = document.querySelectorAll('.slide')[currentIndex];
+      html2canvas(slide).then(canvas => {
+        const ctx = canvas.getContext('2d');
+        const logo = new Image();
+        logo.crossOrigin = 'anonymous';
+        logo.onload = () => {
+          const logoWidth = canvas.width * 0.25;
+          const logoHeight = logo.height * (logoWidth / logo.width);
+          const posX = canvas.width - logoWidth - 20;
+          const posY = canvas.height - logoHeight - 20;
+          ctx.drawImage(logo, posX, posY, logoWidth, logoHeight);
+
+          // criar link e baixar imagem com marca
+          const link = document.createElement('a');
+          link.download = 'pagina_com_marca.png';
+          link.href = canvas.toDataURL('image/png');
+          link.click();
+        };
+        logo.src = 'images/marca.png';
+      });
+    }
+  </script>
+
+  <img src="images/download-icon.png" class="download-page-btn" onclick="baixarImagem()" alt="Download">
+
+  <script src="https://cdn.jsdelivr.net/npm/html2canvas@1.4.1/dist/html2canvas.min.js"></script>
+
+  <style>
+    .download-page-btn {
+      position: fixed;
+      bottom: 20px;
+      right: 20px;
+      width: 60px;
+      height: 60px;
+      cursor: pointer;
+      z-index: 9999;
+    }
+  </style>
+
+  <script>
+    let currentIndex = 0;
+
+    function baixarImagem() {
+      const slides = document.querySelectorAll(".slide");
+      const currentSlide = slides[currentIndex];
+
+      html2canvas(currentSlide).then(canvas => {
+        const ctx = canvas.getContext("2d");
+        const marca = new Image();
+        marca.onload = () => {
+          const width = canvas.width * 0.25;
+          const height = marca.height * (width / marca.width);
+          const x = canvas.width - width - 20;
+          const y = canvas.height - height - 20;
+          ctx.drawImage(marca, x, y, width, height);
+
+          const link = document.createElement("a");
+          link.download = "pagina_com_marca.png";
+          link.href = canvas.toDataURL("image/png");
+          link.click();
+        };
+        marca.src = "images/marca.png";
+      });
+    }
+  </script>
 </body>
+</html>
+
+
+
 </html>
