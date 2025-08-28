@@ -9,6 +9,36 @@
   --shadow:0 8px 20px rgba(0,0,0,.08);
 }
 
+/* Botões também como <a> */
+.btn{
+  display:inline-flex;           /* faz width funcionar em <a> */
+  align-items:center;
+  justify-content:center;        /* centraliza o texto */
+  text-decoration:none;          /* remove sublinhado */
+  border:0;
+  border-radius:10px;
+  padding:14px 22px;
+  font-weight:800;
+  cursor:pointer;
+  transition:transform .08s ease, filter .2s ease, background .2s ease;
+  box-shadow:var(--shadow);
+}
+
+/* garantir que nunca sublinhe nem mude a cor do primário */
+.btn:link,
+.btn:visited,
+.btn:hover,
+.btn:active{ text-decoration:none; }
+
+.btn-primary,
+.btn-primary:link,
+.btn-primary:visited{ color:#fff; }
+
+/* já existia, mantém 100% no card */
+.card .btn{ width:100%; }
+
+
+
 *{box-sizing:border-box}
 html,body{margin:0;padding:0}
 body{font-family:system-ui,-apple-system,'Segoe UI',Roboto,Arial,Helvetica,sans-serif;
